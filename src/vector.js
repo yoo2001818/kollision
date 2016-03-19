@@ -1,11 +1,22 @@
-const vector = {
+function validateInput(x) {
+  if (typeof x !== 'number' && !(x instanceof Number)) {
+    throw new Error('Only numbers are accepted');
+  }
+  if (isNaN(x)) throw new Error('NaN is not accepted');
+}
+function validateVector(v) {
+  if (v.length !== 2) throw new Error('Object is not a vector');
+}
+
+const Vector = {
   create(x, y) {
     let target = new Float32Array(2);
-    target[0] = x;
-    target[1] = y;
-    return target;
+    return Vector.set(x, y, target);
   },
   set(x, y, dest) {
+    validateVector(dest);
+    validateInput(x);
+    validateInput(y);
     dest[0] = x;
     dest[1] = y;
     return dest;
@@ -36,7 +47,7 @@ const vector = {
     return dest;
   },
   divide(target, value, dest) {
-    if (value === 0) return dest;
+    if (value === 0) return Vector.copy(target, dest);
     dest[0] = target[0] / value;
     dest[1] = target[1] / value;
     return dest;
@@ -56,11 +67,11 @@ const vector = {
     return target[0] * target[0] + target[1] * target[1];
   },
   length(target) {
-    return Math.sqrt(vector.lengthSquared(target));
+    return Math.sqrt(Vector.lengthSquared(target));
   },
   normalize(target, dest) {
-    return vector.divide(target, vector.length(target), dest);
+    return Vector.divide(target, Vector.length(target), dest);
   }
 };
 
-export default vector;
+export default Vector;
