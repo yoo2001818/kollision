@@ -51,16 +51,26 @@ const Line = {
   length(target) {
     return Math.sqrt(Line.lengthSquared(target));
   },
+  lengthTaxi(target) {
+    let diffX = Math.abs(target[0] - target[2]);
+    let diffY = Math.abs(target[1] - target[3]);
+    return diffX + diffY;
+  },
+  lengthInfinity(target) {
+    let diffX = Math.abs(target[0] - target[2]);
+    let diffY = Math.abs(target[1] - target[3]);
+    return Math.max(diffX, diffY);
+  },
   width(target) {
     return Math.abs(target[0] - target[2]);
   },
   height(target) {
     return Math.abs(target[1] - target[3]);
   },
-  lerp(target, s, distPoint) {
-    distPoint[0] = target[0] + s * (target[2] - target[0]);
-    distPoint[1] = target[1] + s * (target[3] - target[1]);
-    return distPoint;
+  lerp(target, s, destPoint) {
+    destPoint[0] = target[0] + s * (target[2] - target[0]);
+    destPoint[1] = target[1] + s * (target[3] - target[1]);
+    return destPoint;
   },
   getX(target, y) {
     let s = (y - target[1]) / (target[3] - target[1]);

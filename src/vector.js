@@ -69,8 +69,19 @@ const Vector = {
   length(target) {
     return Math.sqrt(Vector.lengthSquared(target));
   },
+  lengthTaxi(target) {
+    return Math.abs(target[0] + target[1]);
+  },
+  lengthInfinity(target) {
+    return Math.max(Math.abs(target[0]), Math.abs(target[1]));
+  },
   normalize(target, dest) {
     return Vector.divide(target, Vector.length(target), dest);
+  },
+  lerp(a, b, s, dest) {
+    dest[0] = a[0] + s * (b[0] - a[0]);
+    dest[1] = a[1] + s * (b[1] - a[1]);
+    return dest;
   },
   distanceSquared(a, b) {
     let diffX = a[0] - b[0];
@@ -79,6 +90,20 @@ const Vector = {
   },
   distance(a, b) {
     return Math.sqrt(Vector.distanceSquared(a, b));
+  },
+  distanceTaxi(a, b) {
+    return Math.abs(b[0] - a[0]) + Math.abs(b[1] - a[1]);
+  },
+  distanceInfinity(a, b) {
+    return Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
+  },
+  project(a, b, dest) {
+    // Projects vector A to B
+    //      /|
+    // A - / |
+    //     -->---> - B
+    //   Aproj
+    return Vector.multiply(b, Vector.dot(a, b) / Vector.lengthSquared(b), dest);
   }
 };
 
