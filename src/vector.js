@@ -71,6 +71,14 @@ const Vector = {
   },
   normalize(target, dest) {
     return Vector.divide(target, Vector.length(target), dest);
+  },
+  distanceSquared(a, b) {
+    let diffX = a[0] - b[0];
+    let diffY = a[1] - b[1];
+    return diffX * diffX + diffY * diffY;
+  },
+  distance(a, b) {
+    return Math.sqrt(Vector.distanceSquared(a, b));
   }
 };
 
