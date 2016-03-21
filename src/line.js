@@ -1,7 +1,7 @@
 const Line = {
   create(x1, y1, x2, y2) {
     let target = new Float32Array(4);
-    return Line.set(x1, y1, x2, y2, target);
+    return Line.set(x1, y1, x2 == null ? target : x2, y2, target);
   },
   set(x1, y1, x2, y2, dest) {
     if (typeof x1 === 'number') {
@@ -13,11 +13,11 @@ const Line = {
     }
     let start = x1;
     let end = y1;
-    dest[0] = start[0];
-    dest[1] = start[1];
-    dest[2] = end[0];
-    dest[3] = end[1];
-    return dest;
+    x2[0] = start[0];
+    x2[1] = start[1];
+    x2[2] = end[0];
+    x2[3] = end[1];
+    return x2;
   },
   copy(target, dest) {
     dest[0] = target[0];
@@ -57,14 +57,32 @@ const Line = {
   height(target) {
     return Math.abs(target[1] - target[3]);
   },
+  lerp(target, s, distPoint) {
+    distPoint[0] = target[0] + s * (target[2] - target[0]);
+    distPoint[1] = target[1] + s * (target[3] - target[1]);
+    return distPoint;
+  },
+  getX(target, y) {
+    let s = (y - target[1]) / (target[3] - target[1]);
+    return target[0] + s * (target[2] - target[0]);
+  },
+  getY(target, x) {
+    // P = A + s(B - A)
+    // x = Ax + s(Bx - Ax)
+    // x - Ax = s(Bx - Ax)
+    // (x - Ax) / (Bx - Ax) = s
+    // y = Ay + s(By - Ay)
+    let s = (x - target[0]) / (target[2] - target[0]);
+    return target[1] + s * (target[3] - target[1]);
+  },
   slope(target) {
     return (target[3] - target[1]) / (target[2] - target[0]);
   },
   interceptX(target) {
-    
+    return Line.getX(target, 0);
   },
   interceptY(target) {
-
+    return Line.getY(target, 0);
   },
   intersect(a, b, destPoint) {
     let x12 = a[2] - a[0];
