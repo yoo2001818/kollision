@@ -167,7 +167,7 @@ describe('Line', function() {
       expect(Line.interceptY(Line.create(-5, 3, 2, 1))).toBe(11/7);
     });
   });
-  describe('#intersect', function() {
+  describe('#intersects', function() {
     it('should return null if not intersects', function() {
       expect(Line.intersect(Line.create(0, 0, 3, 3), Line.create(-3, 3, -1, 1)))
         .toBe(false);

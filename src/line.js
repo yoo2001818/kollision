@@ -19,12 +19,30 @@ const Line = {
     x2[3] = end[1];
     return x2;
   },
+  bounds(target, destRect) {
+    destRect[0] = Math.min(target[0], target[2]);
+    destRect[1] = Math.min(target[1], target[3]);
+    destRect[2] = Math.max(target[0], target[2]);
+    destRect[3] = Math.max(target[1], target[3]);
+    return destRect;
+  },
   copy(target, dest) {
     dest[0] = target[0];
     dest[1] = target[1];
     dest[2] = target[2];
     dest[3] = target[3];
     return dest;
+  },
+  center(target, destPoint) {
+    destPoint[0] = (target[0] + target[2]) / 2;
+    destPoint[1] = (target[1] + target[3]) / 2;
+    return destPoint;
+  },
+  centerX(target) {
+    return (target[0] + target[2]) / 2;
+  },
+  centerY(target) {
+    return (target[1] + target[3]) / 2;
   },
   start(target, destPoint) {
     destPoint[0] = target[0];
@@ -94,7 +112,7 @@ const Line = {
   interceptY(target) {
     return Line.getY(target, 0);
   },
-  intersect(a, b, destPoint) {
+  intersects(a, b, destPoint) {
     let x12 = a[2] - a[0];
     let y12 = a[3] - a[1];
     let x34 = b[2] - b[0];
