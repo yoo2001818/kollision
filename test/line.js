@@ -1,6 +1,7 @@
 import expect from 'expect';
 import Line from '../src/line';
 import Vector from '../src/vector';
+import Rect from '../src/rect';
 
 describe('Line', function() {
   describe('#create', function() {
@@ -56,6 +57,42 @@ describe('Line', function() {
       expect(Line.copy(Line.create(1, 2, 3, 4), line)).toBe(line);
     });
   });
+  describe('#bounds', function() {
+    it('should set the rect to the line bound', function() {
+      let rect = Rect.create(0, 0, 0, 0);
+      Line.bounds(Line.create(3, 4, 1, 2), rect);
+      expect(rect).toEqual(new Float32Array([1, 2, 3, 4]));
+      Line.bounds(Line.create(1, 4, 3, 2), rect);
+      expect(rect).toEqual(new Float32Array([1, 2, 3, 4]));
+    });
+    it('should return the rect', function() {
+      let rect = Rect.create(0, 0, 0, 0);
+      expect(Line.bounds(Line.create(1, 2, 3, 4), rect)).toBe(rect);
+    });
+  });
+  describe('#center', function() {
+    it('should set the vector to the center', function() {
+      let vector = Vector.create(0, 0);
+      Line.center(Line.create(1, 2, 3, 4), vector);
+      expect(vector).toEqual(new Float32Array([2, 3]));
+    });
+    it('should return the vector', function() {
+      let vector = Vector.create(0, 0);
+      expect(Line.center(Line.create(1, 2, 3, 4), vector)).toBe(vector);
+    });
+  });
+  describe('#centerX', function() {
+    it('should return the center X of the line', function() {
+      expect(Line.centerX(Line.create(4, 4, 8, 7))).toBe(6);
+      expect(Line.centerX(Line.create(-9, -2, 5, 3))).toBe(-2);
+    });
+  });
+  describe('#centerY', function() {
+    it('should return the center Y of the line', function() {
+      expect(Line.centerY(Line.create(4, 4, 8, 7))).toBe(5.5);
+      expect(Line.centerY(Line.create(-9, -2, 5, 3))).toBe(0.5);
+    });
+  });
   describe('#start', function() {
     it('should set the vector to the start', function() {
       let vector = Vector.create(0, 0);
@@ -67,6 +104,12 @@ describe('Line', function() {
       expect(Line.start(Line.create(1, 2, 3, 4), vector)).toBe(vector);
     });
   });
+  describe('#startX', function() {
+    it('should return start X of the line');
+  });
+  describe('#startY', function() {
+    it('should return start Y of the line');
+  });
   describe('#end', function() {
     it('should set the vector to the end', function() {
       let vector = Vector.create(0, 0);
@@ -77,6 +120,12 @@ describe('Line', function() {
       let vector = Vector.create(0, 0);
       expect(Line.end(Line.create(1, 2, 3, 4), vector)).toBe(vector);
     });
+  });
+  describe('#endX', function() {
+    it('should return end X of the line');
+  });
+  describe('#endY', function() {
+    it('should return end Y of the line');
   });
   describe('#translate', function() {
     it('should translate the line', function() {
@@ -100,6 +149,18 @@ describe('Line', function() {
     it('should return the length of the line', function() {
       expect(Line.length(Line.create(4.2, 4, 8.2, 7))).toBe(5);
       expect(Line.length(Line.create(-9, -2, 5, 3))).toBe(Math.sqrt(221));
+    });
+  });
+  describe('#lengthTaxi', function() {
+    it('should return the taxicab length of the line', function() {
+      expect(Line.lengthTaxi(Line.create(4.2, 4, 8.2, 7))).toBe(7);
+      expect(Line.lengthTaxi(Line.create(-9, -2, 5, 3))).toBe(19);
+    });
+  });
+  describe('#lengthInfinity', function() {
+    it('should return the infinity length of the line', function() {
+      expect(Line.lengthInfinity(Line.create(4.2, 4, 8.2, 7))).toBe(4);
+      expect(Line.lengthInfinity(Line.create(-9, -2, 5, 3))).toBe(14);
     });
   });
   describe('#width', function() {
@@ -169,22 +230,22 @@ describe('Line', function() {
   });
   describe('#intersects', function() {
     it('should return null if not intersects', function() {
-      expect(Line.intersect(Line.create(0, 0, 3, 3), Line.create(-3, 3, -1, 1)))
-        .toBe(false);
+      expect(Line.intersects(
+        Line.create(0, 0, 3, 3), Line.create(-3, 3, -1, 1))).toBe(false);
     });
     it('should return true if intersects', function() {
-      expect(Line.intersect(Line.create(0, 0, 2, 2), Line.create(-2, 2, 0, 0)))
+      expect(Line.intersects(Line.create(0, 0, 2, 2), Line.create(-2, 2, 0, 0)))
         .toBe(true);
     });
-    it('should return the dest point if intersects', function() {
+    it('should return true if intersects', function() {
       let vector = Vector.create(0, 0);
-      expect(Line.intersect(Line.create(0, 0, 2, 2), Line.create(-2, 2, 0, 0),
+      expect(Line.intersects(Line.create(0, 0, 2, 2), Line.create(-2, 2, 0, 0),
         vector
-      )).toBe(vector);
+      )).toBe(true);
     });
     it('should set the dest point if intersects', function() {
       let vector = Vector.create(0, 0);
-      Line.intersect(Line.create(0, 0, 2, 2), Line.create(0, 2, 2, 0),
+      Line.intersects(Line.create(0, 0, 2, 2), Line.create(0, 2, 2, 0),
         vector
       );
       expect(vector).toEqual(new Float32Array([1, 1]));

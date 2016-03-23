@@ -123,10 +123,9 @@ const Line = {
     let s = (-y12 * x13 + x12 * y13) / div;
     let t = (x34 * y13 - y34 * x13) / div;
     if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
-      if (destPoint) {
+      if (destPoint != null) {
         destPoint[0] = a[0] + t * x12;
         destPoint[1] = a[1] + t * y12;
-        return destPoint;
       }
       return true;
     }

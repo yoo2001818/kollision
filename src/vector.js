@@ -70,7 +70,7 @@ const Vector = {
     return Math.sqrt(Vector.lengthSquared(target));
   },
   lengthTaxi(target) {
-    return Math.abs(target[0] + target[1]);
+    return Math.abs(target[0]) + Math.abs(target[1]);
   },
   lengthInfinity(target) {
     return Math.max(Math.abs(target[0]), Math.abs(target[1]));
