@@ -80,7 +80,7 @@ const Rect = {
     return container[0] <= contained[0] && contained[2] <= container[2] &&
       container[1] <= contained[1] && contained[3] <= container[3];
   },
-  intersectsLine(rect, line, destPoint, destDelta, destNormal) {
+  intersectsLine(rect, line, destPoint, destDelta, destNormal, destNormal2) {
     // check intersection with slab method
     let dirX = line[2] - line[0];
     let dirY = line[3] - line[1];
@@ -97,7 +97,9 @@ const Rect = {
     let tmin = Math.max(txMin, tyMin);
     let tmax = Math.min(txMax, tyMax);
     if (tmax < tmin) return false;
-    if (tmax > 1 || tmin < 0) return false;
+    if (tmax < 0 || tmin > 1) return false;
+    tmin = Math.max(tmin, 0);
+    tmax = Math.min(tmax, 1);
     if (destPoint != null) {
       destPoint[0] = tmin * dirX + line[0];
       destPoint[1] = tmin * dirY + line[1];
@@ -108,11 +110,20 @@ const Rect = {
     }
     if (destNormal != null) {
       if (txMin > tyMin) {
-        destNormal[0] = dirX > 0 ? 1 : -1;
+        destNormal[0] = dirX < 0 ? 1 : -1;
         destNormal[1] = 0;
       } else {
         destNormal[0] = 0;
-        destNormal[1] = dirY > 0 ? 1 : -1;
+        destNormal[1] = dirY < 0 ? 1 : -1;
+      }
+    }
+    if (destNormal2 != null) {
+      if (txMax < tyMax) {
+        destNormal2[0] = dirX > 0 ? 1 : -1;
+        destNormal2[1] = 0;
+      } else {
+        destNormal2[0] = 0;
+        destNormal2[1] = dirY > 0 ? 1 : -1;
       }
     }
     return true;
