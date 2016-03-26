@@ -96,20 +96,23 @@ const Rect = {
     let tyMax = Math.max(ty1, ty2);
     let tmin = Math.max(txMin, tyMin);
     let tmax = Math.min(txMax, tyMax);
+    let tmin2 = Math.max(tmin, 0);
+    let tmax2 = Math.min(tmax, 1);
     if (tmax < tmin) return false;
     if (tmax < 0 || tmin > 1) return false;
-    tmin = Math.max(tmin, 0);
-    tmax = Math.min(tmax, 1);
     if (destPoint != null) {
-      destPoint[0] = tmin * dirX + line[0];
-      destPoint[1] = tmin * dirY + line[1];
+      destPoint[0] = tmin2 * dirX + line[0];
+      destPoint[1] = tmin2 * dirY + line[1];
     }
     if (destDelta != null) {
-      destDelta[0] = (tmax - tmin) * dirX;
-      destDelta[1] = (tmax - tmin) * dirY;
+      destDelta[0] = (tmax2 - tmin2) * dirX;
+      destDelta[1] = (tmax2 - tmin2) * dirY;
     }
     if (destNormal != null) {
-      if (txMin > tyMin) {
+      if (tmin < 0) {
+        destNormal[0] = 0;
+        destNormal[1] = 0;
+      } else if (txMin > tyMin) {
         destNormal[0] = dirX < 0 ? 1 : -1;
         destNormal[1] = 0;
       } else {
@@ -118,7 +121,10 @@ const Rect = {
       }
     }
     if (destNormal2 != null) {
-      if (txMax < tyMax) {
+      if (tmax > 1) {
+        destNormal2[0] = 0;
+        destNormal2[1] = 0;
+      } else if (txMax < tyMax) {
         destNormal2[0] = dirX > 0 ? 1 : -1;
         destNormal2[1] = 0;
       } else {
